@@ -5,415 +5,260 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  ScrollView,
+  ImageBackground,
   Dimensions,
+  ScrollView,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { theme } from '../../utils/theme';
 
 const { width, height } = Dimensions.get('window');
 
-interface AccountTypeScreenProps {
-  navigation: any;
-}
-
-export default function AccountTypeScreen({ navigation }: AccountTypeScreenProps) {
-  const handlePassengerPress = () => {
-    navigation.navigate('PassengerStack');
-  };
-
-  const handleDriverPress = () => {
-    navigation.navigate('DriverStack');
-  };
-
-  const handleLoginPress = () => {
-    navigation.navigate('Login');
-  };
+export default function AccountTypeScreen() {
+  const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Background Elements */}
-      <View style={styles.backgroundContainer}>
-        {/* Top Right Blur */}
-        <View style={styles.topRightBlur} />
-        
-        {/* Bottom Gradient */}
-        <LinearGradient
-          colors={['rgba(21, 24, 21, 0)', 'rgba(21, 24, 21, 1)']}
-          style={styles.bottomGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
-        
-        {/* Bottom Left Blur */}
-        <View style={styles.bottomLeftBlur} />
-      </View>
-
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        bounces={true}
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      
+      <ImageBackground
+        source={{ uri: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80' }}
+        style={styles.backgroundImage}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <MaterialIcons name="local-taxi" size={32} color="#0df20d" />
-          </View>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Choose</Text>
-            <Text style={styles.titleGradient}>
-              Account Type
-            </Text>
-          </View>
-          <Text style={styles.subtitle}>
-            Select your role to get started with the ultimate ride experience.
-          </Text>
-        </View>
+        <LinearGradient
+          colors={['rgba(34,16,19,0.9)', 'rgba(34,16,19,0.95)', 'rgba(34,16,19,1)']}
+          style={styles.gradient}
+        />
+      </ImageBackground>
 
-        {/* Options Container */}
-        <View style={styles.optionsContainer}>
-          {/* Passenger Option */}
-          <TouchableOpacity
-            style={styles.optionWrapper}
-            activeOpacity={0.9}
-            onPress={handlePassengerPress}
-          >
-            <View style={styles.optionGlow} />
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.1)', 'rgba(255, 255, 255, 0)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={[styles.optionCard, styles.passengerCard]}
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <TouchableOpacity 
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
             >
-              <View style={styles.optionInner}>
-                {/* Background Icon */}
-                <MaterialIcons
-                  name="hail"
-                  size={120}
-                  color="rgba(255, 255, 255, 0.05)"
-                  style={styles.backgroundIcon}
-                />
-                
-                {/* Top Row */}
-                <View style={styles.optionTopRow}>
-                  <View style={styles.iconContainer}>
-                    <MaterialIcons name="person" size={24} color="#fff" />
-                  </View>
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>Popular</Text>
-                  </View>
-                </View>
+              <MaterialIcons name="arrow-back-ios-new" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
 
-                {/* Content */}
-                <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Passenger</Text>
-                  <Text style={styles.optionDescription}>
-                    Request rides, track drivers, and travel safely.
-                  </Text>
-                </View>
+          {/* Title */}
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>Choose Account Type</Text>
+            <Text style={styles.subtitle}>Select how you want to use the app</Text>
+          </View>
 
-                {/* Action Button */}
-                <LinearGradient
-                  colors={['#ef4444', '#d32f2f']}
-                  style={styles.actionButton}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                >
-                  <Text style={styles.actionButtonText}>Sign Up as Passenger</Text>
-                  <MaterialIcons name="arrow-forward" size={20} color="#fff" />
-                </LinearGradient>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          {/* Driver Option */}
-          <TouchableOpacity
-            style={styles.optionWrapper}
-            activeOpacity={0.9}
-            onPress={handleDriverPress}
-          >
-            <View style={[styles.optionGlow, styles.driverGlow]} />
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.05)', 'rgba(255, 255, 255, 0)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={[styles.optionCard, styles.driverCard]}
+          {/* Cards Container */}
+          <View style={styles.cardsContainer}>
+            {/* Passenger Card */}
+            <TouchableOpacity 
+              style={styles.card}
+              onPress={() => navigation.navigate('PassengerSignUp' as never)}
+              activeOpacity={0.8}
             >
-              <View style={styles.optionInner}>
-                {/* Background Icon */}
-                <MaterialIcons
-                  name="directions-car"
-                  size={120}
-                  color="rgba(255, 255, 255, 0.05)"
-                  style={styles.backgroundIcon}
-                />
-                
-                {/* Top Row */}
-                <View style={styles.optionTopRow}>
-                  <View style={[styles.iconContainer, styles.driverIconContainer]}>
-                    <MaterialIcons name="directions-car" size={24} color="#fff" />
-                  </View>
+              <LinearGradient
+                colors={['#2A1A1F', '#1F1216']}
+                style={styles.cardGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialIcons name="person" size={40} color={theme.colors.accentGreen} />
                 </View>
-
-                {/* Content */}
-                <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Driver</Text>
-                  <Text style={styles.optionDescription}>
-                    Drive on your schedule and earn extra income.
-                  </Text>
+                <Text style={styles.cardTitle}>Passenger</Text>
+                <Text style={styles.cardDescription}>
+                  Book rides, track your driver, and travel conveniently
+                </Text>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.cardActionText}>Sign up as Passenger</Text>
+                  <MaterialIcons name="arrow-forward" size={20} color={theme.colors.accentGreen} />
                 </View>
+              </LinearGradient>
+            </TouchableOpacity>
 
-                {/* Action Button */}
-                <View style={styles.driverActionButton}>
-                  <Text style={styles.driverActionButtonText}>Sign Up as Driver</Text>
-                  <MaterialIcons name="arrow-forward" size={20} color="#0df20d" />
+            {/* Driver Card */}
+            <TouchableOpacity 
+              style={styles.card}
+              onPress={() => navigation.navigate('DriverSignUp' as never)}
+              activeOpacity={0.8}
+            >
+              <LinearGradient
+                colors={['#2A1A1F', '#1F1216']}
+                style={styles.cardGradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialIcons name="directions-car" size={40} color={theme.colors.accentGreen} />
                 </View>
-              </View>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+                <Text style={styles.cardTitle}>Driver</Text>
+                <Text style={styles.cardDescription}>
+                  Earn money by driving passengers to their destinations
+                </Text>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.cardActionText}>Sign up as Driver</Text>
+                  <MaterialIcons name="arrow-forward" size={20} color={theme.colors.accentGreen} />
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
 
-        {/* Login Prompt */}
-        <View style={styles.loginContainer}>
-          <Text style={styles.loginText}>
+          {/* Spacer to ensure content doesn't get hidden behind bottom controls */}
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+
+        {/* Footer - Fixed at bottom with safe area padding */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>
             Already have an account?{' '}
-            <Text style={styles.loginLink} onPress={handleLoginPress}>
+            <Text 
+              style={styles.loginLink} 
+              onPress={() => navigation.navigate('Welcome' as never)}
+            >
               Log In
             </Text>
           </Text>
         </View>
-        
-        {/* Extra padding for better scrolling */}
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0a0c0a',
+    backgroundColor: theme.colors.background.darkRed,
   },
-  backgroundContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 0,
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
-  topRightBlur: {
+  backgroundImage: {
     position: 'absolute',
-    top: -height * 0.2,
-    right: -width * 0.1,
-    width: width * 0.7,
-    height: height * 0.6,
-    borderRadius: width * 0.7,
-    backgroundColor: 'rgba(13, 242, 13, 0.05)',
+    width: '100%',
+    height: '100%',
   },
-  bottomGradient: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: height * 0.5,
-    zIndex: 1,
-  },
-  bottomLeftBlur: {
-    position: 'absolute',
-    bottom: height * 0.2,
-    left: -width * 0.2,
-    width: width * 0.6,
-    height: height * 0.6,
-    borderRadius: width * 0.6,
-    backgroundColor: 'rgba(13, 242, 13, 0.05)',
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: Platform.OS === 'ios' ? 48 : 60,
-    paddingBottom: 100,
-    zIndex: 2,
-  },
-  header: {
-    marginBottom: 40,
-  },
-  logoContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: '#151815',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 32,
-    shadowColor: '#0df20d',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 30,
-    elevation: 5,
-  },
-  titleContainer: {
-    marginBottom: 12,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: '800',
-    color: '#fff',
-    letterSpacing: -0.5,
-  },
-  titleGradient: {
-    fontSize: 36,
-    fontWeight: '800',
-    letterSpacing: -0.5,
-    color: '#fff',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#94a3b8',
-    lineHeight: 28,
-  },
-  optionsContainer: {
-    gap: 20,
-    marginBottom: 40,
-  },
-  optionWrapper: {
-    position: 'relative',
-  },
-  optionGlow: {
+  gradient: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    borderRadius: 32,
   },
-  driverGlow: {
-    backgroundColor: 'rgba(13, 242, 13, 0.1)',
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 100, // Extra padding to ensure content is scrollable above footer
   },
-  optionCard: {
-    borderRadius: 32,
-    borderWidth: 1,
-    padding: 2,
+  header: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.md,
+    paddingBottom: theme.spacing.lg,
   },
-  passengerCard: {
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  driverCard: {
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  optionInner: {
-    borderRadius: 30,
-    padding: 24,
-    overflow: 'hidden',
-    position: 'relative',
-    backgroundColor: '#151815',
-  },
-  backgroundIcon: {
-    position: 'absolute',
-    right: -24,
-    bottom: -24,
-    transform: [{ rotate: '12deg' }],
-  },
-  optionTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-    zIndex: 1,
-  },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  driverIconContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  badge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+  backButton: {
+    width: 40,
+    height: 40,
     borderRadius: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  badgeText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#94a3b8',
+  titleSection: {
+    paddingHorizontal: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
-  optionContent: {
-    marginBottom: 24,
-    zIndex: 1,
+  title: {
+    fontFamily: theme.fonts.plusJakarta + '-Bold',
+    fontSize: 32,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.sm,
   },
-  optionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
+  subtitle: {
+    fontFamily: theme.fonts.plusJakarta + '-Regular',
+    fontSize: 16,
+    color: theme.colors.text.secondary,
+    lineHeight: 22,
   },
-  optionDescription: {
+  cardsContainer: {
+    paddingHorizontal: theme.spacing.lg,
+    gap: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
+  },
+  card: {
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden',
+    ...theme.shadows.lg,
+    minHeight: 220,
+  },
+  cardGradient: {
+    padding: theme.spacing.xl,
+    gap: theme.spacing.md,
+    flex: 1,
+  },
+  cardIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(26, 77, 46, 0.34)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  cardTitle: {
+    fontFamily: theme.fonts.plusJakarta + '-Bold',
+    fontSize: 24,
+    color: theme.colors.text.primary,
+    marginBottom: 4,
+  },
+  cardDescription: {
+    fontFamily: theme.fonts.plusJakarta + '-Regular',
     fontSize: 14,
-    color: '#94a3b8',
+    color: theme.colors.text.secondary,
     lineHeight: 20,
+    flex: 1,
   },
-  actionButton: {
+  cardFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderRadius: 16,
-    shadowColor: '#ef4444',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 20,
-    elevation: 5,
+    marginTop: 'auto',
+    paddingTop: theme.spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
   },
-  actionButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-    fontSize: 14,
-  },
-  driverActionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: 'rgba(13, 242, 13, 0.3)',
-    backgroundColor: 'rgba(13, 242, 13, 0.05)',
-  },
-  driverActionButtonText: {
-    color: '#0df20d',
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-    fontSize: 14,
-  },
-  loginContainer: {
-    paddingTop: 20,
-    paddingBottom: 24,
-    alignItems: 'center',
-  },
-  loginText: {
-    fontSize: 14,
-    color: '#64748b',
-  },
-  loginLink: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
+  cardActionText: {
+    fontFamily: theme.fonts.plusJakarta + '-Medium',
+    fontSize: 16,
+    color: theme.colors.accentGreen,
   },
   bottomSpacer: {
-    height: 40,
+    height: 20,
+  },
+  footer: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.lg,
+    paddingBottom: Platform.OS === 'ios' ? theme.spacing.xl : theme.spacing.xl + 20, // Extra padding for Android navigation bar
+    backgroundColor: 'transparent',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  footerText: {
+    fontFamily: theme.fonts.plusJakarta + '-Regular',
+    fontSize: 16,
+    color: theme.colors.text.secondary,
+    textAlign: 'center',
+  },
+  loginLink: {
+    fontFamily: theme.fonts.plusJakarta + '-Bold',
+    color: theme.colors.text.primary,
   },
 });

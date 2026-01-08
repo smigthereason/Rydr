@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Image,
-  Dimensions,
+  StatusBar,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-
-const { width } = Dimensions.get('window');
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { theme } from '../../utils/theme';
 
 interface DocumentStatus {
   id: string;
@@ -60,9 +59,10 @@ interface DocumentUploadScreenProps {
 }
 
 export default function DocumentUploadScreen({ navigation }: DocumentUploadScreenProps) {
+  const insets = useSafeAreaInsets();
   const [currentStep, setCurrentStep] = useState(2);
   const totalSteps = 4;
-  const progressPercentage = (currentStep / totalSteps) * 100;
+  const progressPercentage = 50; // 2 of 4 = 50%
 
   const handleBack = () => {
     navigation.goBack();
@@ -84,12 +84,32 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
     // Handle background check
   };
 
+  const getStatusColor = (status: DocumentStatus['status']) => {
+    switch (status) {
+      case 'error': return theme.colors.status.error;
+      case 'success': return theme.colors.primaryGreen;
+      case 'pending': return theme.colors.text.secondary;
+      case 'disabled': return theme.colors.text.muted;
+    }
+  };
+
+  const getStatusBackground = (status: DocumentStatus['status']) => {
+    switch (status) {
+      case 'error': return 'rgba(239, 68, 68, 0.1)';
+      case 'success': return 'rgba(13, 242, 13, 0.1)';
+      case 'pending': return 'rgba(255, 255, 255, 0.05)';
+      case 'disabled': return 'rgba(255, 255, 255, 0.02)';
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.background.darkRed} />
+      
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top }]}>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <MaterialIcons name="arrow-back-ios-new" size={24} color="#000" />
+          <MaterialIcons name="arrow-back-ios-new" size={24} color={theme.colors.text.primary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Document Upload</Text>
         <View style={styles.headerPlaceholder} />
@@ -98,7 +118,7 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
       {/* Progress Section */}
       <View style={styles.progressContainer}>
         <View style={styles.progressHeader}>
-          <Text style={styles.progressStep}>Step {currentStep} of {totalSteps}</Text>
+          <Text style={styles.progressStep}>STEP {currentStep} OF {totalSteps}</Text>
           <Text style={styles.progressPercentage}>{progressPercentage}% Completed</Text>
         </View>
         <View style={styles.progressBar}>
@@ -106,7 +126,14 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
         </View>
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: Math.max(insets.bottom, 20) + 100 }
+        ]}
+      >
         {/* Headline */}
         <View style={styles.headlineContainer}>
           <Text style={styles.headlineTitle}>Required Documents</Text>
@@ -134,11 +161,14 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
 
               <View style={styles.documentContent}>
                 <View style={styles.documentHeader}>
-                  <View style={styles.iconContainer}>
+                  <View style={[
+                    styles.iconContainer,
+                    { backgroundColor: getStatusBackground(doc.status) }
+                  ]}>
                     <MaterialIcons
                       name={doc.icon as any}
                       size={24}
-                      color={doc.status === 'error' ? '#FF4D4D' : doc.status === 'success' ? '#13ec5b' : '#666'}
+                      color={getStatusColor(doc.status)}
                     />
                   </View>
                   
@@ -147,7 +177,7 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
                       <Text style={styles.documentTitle}>{doc.title}</Text>
                       {doc.status === 'error' && (
                         <View style={styles.requiredBadge}>
-                          <MaterialIcons name="error" size={14} color="#FF4D4D" />
+                          <MaterialIcons name="error" size={14} color={theme.colors.status.error} />
                           <Text style={styles.requiredText}>Required</Text>
                         </View>
                       )}
@@ -172,8 +202,9 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
                   <TouchableOpacity
                     style={styles.uploadButton}
                     onPress={handleUploadLicense}
+                    activeOpacity={0.7}
                   >
-                    <MaterialIcons name="upload-file" size={20} color="#FF4D4D" />
+                    <MaterialIcons name="upload-file" size={20} color={theme.colors.status.error} />
                     <Text style={styles.uploadButtonText}>Upload License</Text>
                   </TouchableOpacity>
                 )}
@@ -182,9 +213,10 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
                   <TouchableOpacity
                     style={styles.uploadPendingCard}
                     onPress={handleInsuranceUpload}
+                    activeOpacity={0.7}
                   >
                     <View style={styles.uploadIconContainer}>
-                      <MaterialIcons name="add-a-photo" size={20} color="#666" />
+                      <MaterialIcons name="add-a-photo" size={20} color={theme.colors.text.secondary} />
                     </View>
                   </TouchableOpacity>
                 )}
@@ -200,8 +232,9 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
                 <TouchableOpacity
                   style={styles.editButton}
                   onPress={handleEditRegistration}
+                  activeOpacity={0.7}
                 >
-                  <MaterialIcons name="edit" size={20} color="#666" />
+                  <MaterialIcons name="edit" size={20} color={theme.colors.text.secondary} />
                 </TouchableOpacity>
               )}
             </View>
@@ -210,17 +243,26 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
       </ScrollView>
 
       {/* Sticky Footer */}
-      <LinearGradient
-        colors={['rgba(246, 248, 246, 0)', 'rgba(246, 248, 246, 1)', 'rgba(246, 248, 246, 1)']}
-        style={styles.footer}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-      >
-        <TouchableOpacity style={styles.submitButton} disabled={true}>
-          <Text style={styles.submitButtonText}>Submit for Review</Text>
-        </TouchableOpacity>
-        <Text style={styles.requiredTextBottom}>Action required on 1 document</Text>
-      </LinearGradient>
+      <View style={[
+        styles.footer,
+        { paddingBottom: Math.max(insets.bottom, 20) }
+      ]}>
+        <LinearGradient
+          colors={['rgba(34, 16, 19, 0)', 'rgba(34, 16, 19, 0.9)', 'rgba(34, 16, 19, 1)']}
+          style={styles.footerGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        >
+          <TouchableOpacity 
+            style={styles.submitButton} 
+            disabled={true}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.submitButtonText}>Submit for Review</Text>
+          </TouchableOpacity>
+          <Text style={styles.requiredTextBottom}>Action required on 1 document</Text>
+        </LinearGradient>
+      </View>
     </SafeAreaView>
   );
 }
@@ -228,103 +270,109 @@ export default function DocumentUploadScreen({ navigation }: DocumentUploadScree
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f6f8f6',
+    backgroundColor: theme.colors.background.darkRed,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: 'rgba(246, 248, 246, 0.95)',
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.md,
+    backgroundColor: 'rgba(34, 16, 19, 0.95)',
   },
   backButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: theme.borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.05)',
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: theme.colors.text.primary,
   },
   headerPlaceholder: {
     width: 40,
   },
   progressContainer: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    paddingBottom: 24,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+    paddingBottom: theme.spacing.lg,
   },
   progressHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    marginBottom: 8,
+    marginBottom: theme.spacing.xs,
   },
   progressStep: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#13ec5b',
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: theme.colors.primaryGreen,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   progressPercentage: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#666',
+    color: theme.colors.text.secondary,
   },
   progressBar: {
     height: 6,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: theme.borderRadius.sm,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#13ec5b',
-    borderRadius: 3,
-    shadowColor: '#13ec5b',
+    backgroundColor: theme.colors.primaryGreen,
+    borderRadius: theme.borderRadius.sm,
+    shadowColor: theme.colors.primaryGreen,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
-    elevation: 5,
   },
   scrollView: {
     flex: 1,
-    paddingHorizontal: 24,
+  },
+  scrollContent: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: 0,
   },
   headlineContainer: {
-    marginBottom: 24,
+    marginBottom: theme.spacing.lg,
   },
   headlineTitle: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 12,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.sm,
+    lineHeight: 38,
   },
   headlineDescription: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
     lineHeight: 20,
   },
   documentsContainer: {
-    gap: 16,
-    marginBottom: 40,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.xl,
   },
   documentCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
+    backgroundColor: theme.colors.surface.darkRed,
+    borderRadius: theme.borderRadius.xl,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    padding: 16,
+    borderColor: 'rgba(255, 255, 255, 0.05)',
+    padding: theme.spacing.md,
     position: 'relative',
+    ...theme.shadows.sm,
   },
   documentCardError: {
-    borderColor: '#FECACA',
-    backgroundColor: '#fff',
+    borderColor: 'rgba(239, 68, 68, 0.3)',
   },
   documentCardDisabled: {
     opacity: 0.7,
@@ -335,23 +383,28 @@ const styles = StyleSheet.create({
     right: 12,
     width: 24,
     height: 24,
-    borderRadius: 12,
-    backgroundColor: '#13ec5b',
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.primaryGreen,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: theme.colors.primaryGreen,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
   },
   documentContent: {
     flex: 1,
   },
   documentHeader: {
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 16,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.md,
   },
   iconContainer: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: theme.borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -367,55 +420,57 @@ const styles = StyleSheet.create({
   documentTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000',
+    color: theme.colors.text.primary,
     flex: 1,
   },
   requiredBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FECACA',
-    borderRadius: 12,
-    paddingHorizontal: 8,
+    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing.xs,
     paddingVertical: 4,
     gap: 4,
   },
   requiredText: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#DC2626',
+    color: theme.colors.status.error,
   },
   documentDescription: {
     fontSize: 14,
-    color: '#666',
+    color: theme.colors.text.secondary,
     marginBottom: 4,
+    lineHeight: 20,
   },
   successDescription: {
-    color: '#13ec5b',
+    color: theme.colors.primaryGreen,
     fontWeight: '500',
   },
   disabledDescription: {
-    color: '#9CA3AF',
+    color: theme.colors.text.muted,
   },
   documentDetails: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: theme.colors.text.muted,
+    marginTop: 2,
   },
   uploadButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    backgroundColor: '#FEF2F2',
-    borderRadius: 8,
+    gap: theme.spacing.xs,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: theme.borderRadius.lg,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: 'rgba(239, 68, 68, 0.3)',
     borderStyle: 'dashed',
   },
   uploadButtonText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#DC2626',
+    color: theme.colors.status.error,
   },
   uploadPendingCard: {
     alignSelf: 'flex-end',
@@ -423,8 +478,8 @@ const styles = StyleSheet.create({
   uploadIconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -437,35 +492,38 @@ const styles = StyleSheet.create({
     right: 12,
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: theme.borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 40,
+  },
+  footerGradient: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.lg,
   },
   submitButton: {
-    backgroundColor: '#E5E7EB',
-    borderRadius: 12,
-    paddingVertical: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
   },
   submitButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#9CA3AF',
+    color: theme.colors.text.muted,
   },
   requiredTextBottom: {
     fontSize: 12,
-    color: '#666',
+    color: theme.colors.text.secondary,
     textAlign: 'center',
-    marginTop: 12,
+    marginTop: theme.spacing.sm,
   },
 });

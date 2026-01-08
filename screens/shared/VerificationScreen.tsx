@@ -120,9 +120,9 @@ export default function VerificationScreen() {
               // Navigate based on user type (you would get this from navigation params)
               const userType = 'passenger'; // This should come from navigation params
               if (userType === 'passenger') {
-                navigation.navigate('Passenger', { screen: 'Payment' } as never);
+                (navigation.navigate as any)('Passenger', { screen: 'Payment' });
               } else {
-                navigation.navigate('Driver', { screen: 'DocumentUpload' } as never);
+                (navigation.navigate as any)('Driver', { screen: 'DocumentUpload' });
               }
             }}
           >

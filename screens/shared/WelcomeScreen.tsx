@@ -8,9 +8,12 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  Platform,
+  StatusBar,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
 
@@ -36,7 +39,9 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      
       {/* Background Image */}
       <Image
         source={{
@@ -52,111 +57,118 @@ export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
         end={{ x: 0, y: 0 }}
       />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <MaterialIcons name="local-taxi" size={32} color="#DC2626" />
-          <Text style={styles.logoText}>
-            Ryd<Text style={styles.logoHighlight}>R</Text>
-          </Text>
-        </View>
-      </View>
-
-      {/* Content */}
-      <View style={styles.content}>
-        {/* Bottom Sheet */}
-        <LinearGradient
-          colors={["rgba(24, 24, 27, 0.95)", "rgba(24, 24, 27, 0.98)"]}
-          style={styles.bottomSheet}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
-          {/* Handle */}
-          <View style={styles.handle} />
-
-          {/* Main Content */}
-          <View style={styles.bottomContent}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>
-                Ride in <Text style={styles.titleHighlight}>Style</Text>.{"\n"}
-                Arrive on Time.
+          {/* Header */}
+          <View style={styles.header}>
+            <View style={styles.logoContainer}>
+              <MaterialIcons name="local-taxi" size={32} color="#DC2626" />
+              <Text style={styles.logoText}>
+                Ryd<Text style={styles.logoHighlight}>R</Text>
               </Text>
-              <Text style={styles.subtitle}>
-                Premium rides at your fingertips. Experience the ultimate urban
-                transport solution.
-              </Text>
-            </View>
-
-            {/* Buttons */}
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity
-                style={styles.primaryButton}
-                activeOpacity={0.9}
-                onPress={handleGetStarted}
-              >
-                <Text style={styles.primaryButtonText}>Get Started</Text>
-                <MaterialIcons
-                  name="arrow-forward"
-                  size={20}
-                  color="#fff"
-                  style={styles.buttonIcon}
-                />
-              </TouchableOpacity>
-
-              <View style={styles.socialButtonsContainer}>
-                <TouchableOpacity
-                  style={styles.socialButton}
-                  activeOpacity={0.8}
-                  onPress={handleGoogleSignIn}
-                >
-                  <Image
-                    source={{
-                      uri: "https://developers.google.com/static/identity/images/g-logo.png",
-                    }}
-                    style={styles.googleIcon}
-                  />
-                  <Text style={styles.socialButtonText}>Google</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.socialButton}
-                  activeOpacity={0.8}
-                  onPress={handleAppleSignIn}
-                >
-                  {/* Apple SVG as component */}
-                  <View style={styles.appleIcon}>
-                    <MaterialIcons name="apple" size={20} color="#fff" />
-                  </View>
-                  <Text style={styles.socialButtonText}>Apple</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {/* Login Prompt & Availability */}
-            <View style={styles.footer}>
-              <View style={styles.loginContainer}>
-                <Text style={styles.loginText}>
-                  Already have an account?{" "}
-                  <Text style={styles.loginLink} onPress={handleSignIn}>
-                    Sign In
-                  </Text>
-                </Text>
-              </View>
-
-              <View style={styles.availabilityContainer}>
-                <View style={styles.pulseContainer}>
-                  <View style={styles.pulseOuter} />
-                  <View style={styles.pulseInner} />
-                </View>
-                <Text style={styles.availabilityText}>
-                  Drivers available nearby
-                </Text>
-              </View>
             </View>
           </View>
-        </LinearGradient>
-      </View>
-    </SafeAreaView>
+
+          {/* Content */}
+          <View style={styles.content}>
+            {/* Bottom Sheet */}
+            <LinearGradient
+              colors={["rgba(24, 24, 27, 0.95)", "rgba(24, 24, 27, 0.98)"]}
+              style={styles.bottomSheet}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+            >
+              {/* Handle */}
+              <View style={styles.handle} />
+
+              {/* Main Content */}
+              <View style={styles.bottomContent}>
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>
+                    Ride in <Text style={styles.titleHighlight}>Style</Text>.{"\n"}
+                    Arrive on Time.
+                  </Text>
+                  <Text style={styles.subtitle}>
+                    Premium rides at your fingertips. Experience the ultimate urban
+                    transport solution.
+                  </Text>
+                </View>
+
+                {/* Buttons */}
+                <View style={styles.buttonsContainer}>
+                  <TouchableOpacity
+                    style={styles.primaryButton}
+                    activeOpacity={0.9}
+                    onPress={handleGetStarted}
+                  >
+                    <Text style={styles.primaryButtonText}>Get Started</Text>
+                    <MaterialIcons
+                      name="arrow-forward"
+                      size={20}
+                      color="#fff"
+                      style={styles.buttonIcon}
+                    />
+                  </TouchableOpacity>
+
+                  <View style={styles.socialButtonsContainer}>
+                    <TouchableOpacity
+                      style={styles.socialButton}
+                      activeOpacity={0.8}
+                      onPress={handleGoogleSignIn}
+                    >
+                      <View style={styles.googleIconContainer}>
+                        <FontAwesome name="google" size={20} color="#fafafaff" />
+                      </View>
+                      <Text style={styles.socialButtonText}>Google</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.socialButton}
+                      activeOpacity={0.8}
+                      onPress={handleAppleSignIn}
+                    >
+                      <View style={styles.appleIconContainer}>
+                        <MaterialIcons name="apple" size={20} color="#fff" />
+                      </View>
+                      <Text style={styles.socialButtonText}>Apple</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                {/* Login Prompt & Availability */}
+                <View style={styles.footer}>
+                  <View style={styles.loginContainer}>
+                    <Text style={styles.loginText}>
+                      Already have an account?{" "}
+                      <Text style={styles.loginLink} onPress={handleSignIn}>
+                        Sign In
+                      </Text>
+                    </Text>
+                  </View>
+
+                  <View style={styles.availabilityContainer}>
+                    <View style={styles.pulseContainer}>
+                      <View style={styles.pulseOuter} />
+                      <View style={styles.pulseInner} />
+                    </View>
+                    <Text style={styles.availabilityText}>
+                      Drivers available nearby
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </LinearGradient>
+          </View>
+          
+          {/* Bottom spacer for Android navigation bar */}
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 
@@ -165,15 +177,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#09090b",
   },
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
   },
   backgroundOverlay: {
     ...StyleSheet.absoluteFillObject,
   },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+  },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 48,
+    paddingTop: Platform.OS === 'ios' ? 20 : 40,
     zIndex: 10,
   },
   logoContainer: {
@@ -197,6 +217,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "flex-end",
+    marginBottom: Platform.OS === 'android' ? 20 : 0,
   },
   bottomSheet: {
     borderTopLeftRadius: 32,
@@ -209,7 +230,8 @@ const styles = StyleSheet.create({
     shadowRadius: 40,
     elevation: 20,
     paddingTop: 16,
-    paddingBottom: 40,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 60,
+    marginTop: 'auto',
   },
   handle: {
     width: 48,
@@ -285,11 +307,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.05)",
   },
-  googleIcon: {
+  googleIconContainer: {
     width: 20,
     height: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  appleIcon: {
+  appleIconContainer: {
     width: 20,
     height: 20,
     alignItems: "center",
@@ -303,6 +327,7 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: "center",
     gap: 24,
+    marginTop: 'auto',
   },
   loginContainer: {
     alignItems: "center",
@@ -351,5 +376,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "500",
     color: "#10B981",
+  },
+  bottomSpacer: {
+    height: Platform.OS === 'android' ? 30 : 20,
   },
 });

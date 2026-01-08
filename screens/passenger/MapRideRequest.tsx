@@ -8,8 +8,12 @@ import {
   SafeAreaView,
   Image,
   Dimensions,
+  StatusBar,
 } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { theme } from '../../utils/theme';
 
 const { width } = Dimensions.get('window');
 
@@ -28,7 +32,7 @@ const rideOptions: RideOption[] = [
     id: '1',
     name: 'Sleek',
     time: '3 mins',
-    price: '$18.50',
+    price: 'KSh 650',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDb6EDyIq0uDevHE31SXDNOJ4BpNtYa8-FUz6uJKPdCn9oOJ1NeSf6MU1FENkm6jTsRtpI8eV3I9XN8BQqDwZbkEDiDJim6rwCqw9SQH0ojPfgCQnCF61kNoJAl9fFK5d9x6yWpY0SXYoF5udmuEa9olh_dUlNPa0MBwoPtjd5Oq9M2kpNdCr48NpVMgGv4W_gwBZ4VgPmacfOK7ZvTUU55qvEMYkdrIJam5nG2YojcWxN4roha1Di_oVZAOtxoepLih8DXgBUFmxAl',
     isBestValue: true,
     isSelected: true,
@@ -37,49 +41,52 @@ const rideOptions: RideOption[] = [
     id: '2',
     name: 'Standard',
     time: '6 mins',
-    price: '$14.20',
+    price: 'KSh 450',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD6017qtd0-Cuht6bC-6Q8IV1in6y_Jsbq5Wx55nXiDfOiVN43j-Su9EOv1F-p8LuFl_HCcf31aeCcV2YHI77_tz7ZCrP0yqEyqVLXz3uH2F3RWa_cMAqoionDwXUC4hLI_HutKPfEIrelBavvo1xf2FwlEaHNjRLrRDlIcJ0SFHU0PAfOx8r1CbS2fXAgcL1OpcHluCEtERQHw04_nYY4kpoaf9oWl31tm9qxIaFF6V7VunQhDoxFqtfOscazpg9eXoAvJQ1f-uG7p',
   },
   {
     id: '3',
     name: 'Lux',
     time: '12 mins',
-    price: '$28.00',
+    price: 'KSh 950',
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCHVlLebzaI9PxiEkNjtyLkrt_STrBRokLH-fsBdu4_mbBw3GyvBX6yv7UQwOx9MuTBVkvoTB2IcGHzP6c0tzWYbhafyYn7E05KwaEM9g8h0l0_X-r0Py1heeHmfTbzWL05OJZGPQqGOK6b84AzvCw4gypLZu6wpUmt7qMM-DB-fGg49sEnOk9Vp3ojjiULrId1KD4ZPs1OQEKjL5V6Mv80nTXxMKdu5XeXoMyUuWD-DrAeTdv32NXWuao1Npyy9YTl0MmrntOuAc1C',
   },
 ];
 
-interface MapAndRideRequestScreenProps {
+interface MapRideRequestScreenProps {
   navigation: any;
 }
 
-export default function MapAndRideRequestScreen({ navigation }: MapAndRideRequestScreenProps) {
+export default function MapRideRequestScreen({ navigation }: MapRideRequestScreenProps) {
+  const insets = useSafeAreaInsets();
   const [selectedRide, setSelectedRide] = useState<string>('1');
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
+  const handleConfirmRide = () => {
+    // Handle ride confirmation
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Status Bar (Mock) */}
-      <View style={styles.statusBar}>
-        <Text style={styles.statusTime}>9:41</Text>
-        <View style={styles.statusIcons}>
-          <MaterialIcons name="signal-cellular-alt" size={16} color="#111827" />
-          <MaterialIcons name="wifi" size={16} color="#111827" />
-          <MaterialIcons name="battery-full" size={16} color="#111827" />
-        </View>
-      </View>
+      <StatusBar barStyle="light-content" backgroundColor={theme.colors.background.dark} />
+      
+      
 
-      {/* Map Background */}
+      {/* Map Background - Kenyan themed */}
       <View style={styles.mapContainer}>
         {/* Map Grid Lines */}
         <View style={styles.mapGrid} />
         
-        {/* Routes */}
+        {/* Nairobi City Routes */}
         <View style={styles.route1} />
         <View style={styles.route2} />
         <View style={styles.route3} />
         <View style={styles.route4} />
 
-        {/* Current Location Marker */}
+        {/* Current Location Marker - Nairobi CBD */}
         <View style={styles.currentLocationContainer}>
           <View style={styles.locationBadge}>
             <Text style={styles.locationBadgeText}>Your Location</Text>
@@ -91,34 +98,34 @@ export default function MapAndRideRequestScreen({ navigation }: MapAndRideReques
           </View>
         </View>
 
-        {/* Drop-off Marker */}
+        {/* Drop-off Marker - JKIA Airport */}
         <View style={styles.dropoffContainer}>
           <View style={styles.dropoffBadge}>
             <Text style={styles.dropoffBadgeText}>Drop-off</Text>
           </View>
-          <MaterialIcons name="location-on" size={36} color="#EF4444" />
+          <MaterialIcons name="location-on" size={36} color={theme.colors.primary} />
         </View>
 
         {/* Map Controls */}
-        <TouchableOpacity style={[styles.mapControl, styles.menuButton]}>
-          <MaterialIcons name="menu" size={24} color="#111827" />
+        <TouchableOpacity style={[styles.mapControl, styles.menuButton]} onPress={handleBack}>
+          <MaterialIcons name="arrow-back-ios-new" size={24} color={theme.colors.text.primary} />
         </TouchableOpacity>
 
         <View style={styles.rightControls}>
           <TouchableOpacity style={styles.mapControl}>
-            <MaterialIcons name="search" size={24} color="#111827" />
+            <MaterialIcons name="search" size={24} color={theme.colors.text.primary} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.mapControl}>
-            <MaterialIcons name="my-location" size={24} color="#111827" />
+            <MaterialIcons name="my-location" size={24} color={theme.colors.text.primary} />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* Bottom Sheet */}
-      <View style={styles.bottomSheet}>
+      <View style={[styles.bottomSheet, { paddingBottom: Math.max(insets.bottom, 20) }]}>
         <View style={styles.bottomSheetHandle} />
         
-        {/* Pickup and Drop-off */}
+        {/* Pickup and Drop-off - Kenyan Locations */}
         <View style={styles.locationContainer}>
           <View style={styles.locationDots}>
             <View style={styles.pickupDot} />
@@ -130,7 +137,7 @@ export default function MapAndRideRequestScreen({ navigation }: MapAndRideReques
             <View style={styles.locationSection}>
               <Text style={styles.locationLabel}>PICK-UP</Text>
               <View style={styles.locationRow}>
-                <Text style={styles.locationText}>Current Location</Text>
+                <Text style={styles.locationText}>Nairobi CBD</Text>
                 <TouchableOpacity style={styles.editButton}>
                   <Text style={styles.editButtonText}>Edit</Text>
                 </TouchableOpacity>
@@ -140,8 +147,8 @@ export default function MapAndRideRequestScreen({ navigation }: MapAndRideReques
             <View style={styles.locationSection}>
               <Text style={styles.locationLabel}>DROP-OFF</Text>
               <View style={styles.locationRow}>
-                <Text style={styles.dropoffText}>Shinjuku Station, Tokyo</Text>
-                <Text style={styles.distanceText}>4.2 km</Text>
+                <Text style={styles.dropoffText}>JKIA Airport</Text>
+                <Text style={styles.distanceText}>18.5 km</Text>
               </View>
             </View>
           </View>
@@ -159,10 +166,11 @@ export default function MapAndRideRequestScreen({ navigation }: MapAndRideReques
               key={option.id}
               style={[
                 styles.rideOption,
-                option.isSelected && styles.selectedRideOption,
+                selectedRide === option.id && styles.selectedRideOption,
                 option.isBestValue && styles.bestValueRideOption,
               ]}
               onPress={() => setSelectedRide(option.id)}
+              activeOpacity={0.7}
             >
               {option.isBestValue && (
                 <View style={styles.bestValueBadge}>
@@ -190,21 +198,32 @@ export default function MapAndRideRequestScreen({ navigation }: MapAndRideReques
         {/* Payment and Promo */}
         <View style={styles.paymentSection}>
           <TouchableOpacity style={styles.paymentMethod}>
-            <MaterialIcons name="credit-card" size={20} color="#EF4444" />
+            <MaterialIcons name="credit-card" size={20} color={theme.colors.primary} />
             <Text style={styles.paymentText}>**** 4291</Text>
-            <MaterialIcons name="keyboard-arrow-down" size={16} color="#9CA3AF" />
+            <MaterialIcons name="keyboard-arrow-down" size={16} color={theme.colors.text.secondary} />
           </TouchableOpacity>
           
           <View style={styles.promoBadge}>
-            <MaterialIcons name="local-offer" size={16} color="#10B981" />
+            <MaterialIcons name="local-offer" size={16} color={theme.colors.primaryGreen} />
             <Text style={styles.promoText}>Promo applied</Text>
           </View>
         </View>
 
         {/* Confirm Button */}
-        <TouchableOpacity style={styles.confirmButton}>
-          <Text style={styles.confirmButtonText}>Confirm Ride</Text>
-          <MaterialIcons name="arrow-forward" size={20} color="#fff" />
+        <TouchableOpacity 
+          style={styles.confirmButton}
+          onPress={handleConfirmRide}
+          activeOpacity={0.9}
+        >
+          <LinearGradient
+            colors={[theme.colors.primary, '#ff3366']}
+            style={styles.gradientButton}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <Text style={styles.confirmButtonText}>Confirm Ride</Text>
+            <MaterialIcons name="arrow-forward" size={20} color={theme.colors.text.primary} />
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -214,29 +233,12 @@ export default function MapAndRideRequestScreen({ navigation }: MapAndRideReques
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: theme.colors.background.dark,
   },
-  statusBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 8,
-    zIndex: 50,
-  },
-  statusTime: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#111827',
-  },
-  statusIcons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
+ 
   mapContainer: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: theme.colors.background.dark,
     position: 'relative',
   },
   mapGrid: {
@@ -245,9 +247,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#1a1a1a',
-    backgroundImage: 'linear-gradient(#262626 1px, transparent 1px), linear-gradient(90deg, #262626 1px, transparent 1px)',
-    backgroundSize: '40px 40px',
+    backgroundColor: '#0a0a0a',
+   
   },
   route1: {
     position: 'absolute',
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     left: '-3%',
     width: '110%',
     height: 8,
-    backgroundColor: '#9CA3AF',
+    backgroundColor: theme.colors.text.secondary,
     opacity: 0.6,
   },
   route2: {
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     left: '12%',
     width: '85%',
     height: 8,
-    backgroundColor: '#9CA3AF',
+    backgroundColor: theme.colors.text.secondary,
     opacity: 0.6,
   },
   route3: {
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
     left: '75%',
     width: 6,
     height: '100%',
-    backgroundColor: '#9CA3AF',
+    backgroundColor: theme.colors.text.secondary,
     opacity: 0.6,
   },
   route4: {
@@ -282,7 +283,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: 6,
-    backgroundColor: '#9CA3AF',
+    backgroundColor: theme.colors.text.secondary,
     opacity: 0.6,
   },
   currentLocationContainer: {
@@ -293,28 +294,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   locationBadge: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
+    backgroundColor: theme.colors.surface.dark,
+    paddingHorizontal: theme.spacing.sm,
     paddingVertical: 6,
-    borderRadius: 20,
+    borderRadius: theme.borderRadius.full,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     marginBottom: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    ...theme.shadows.sm,
   },
   locationBadgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#111827',
+    color: theme.colors.text.primary,
   },
   locationBadgeSubtext: {
     fontSize: 12,
-    color: '#6B7280',
+    color: theme.colors.text.secondary,
   },
   locationMarker: {
     width: 64,
@@ -327,21 +326,16 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(16, 185, 129, 0.2)',
-    animation: 'pulse 2s infinite',
+    backgroundColor: 'rgba(13, 242, 13, 0.2)',
   },
   locationDot: {
     width: 16,
     height: 16,
-    borderRadius: 8,
-    backgroundColor: '#10B981',
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.primaryGreen,
     borderWidth: 2,
-    borderColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    borderColor: theme.colors.background.dark,
+    ...theme.shadows.md,
   },
   dropoffContainer: {
     position: 'absolute',
@@ -350,34 +344,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dropoffBadge: {
-    backgroundColor: '#EF4444',
-    paddingHorizontal: 12,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing.sm,
     paddingVertical: 4,
-    borderRadius: 20,
+    borderRadius: theme.borderRadius.full,
     marginBottom: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    ...theme.shadows.md,
   },
   dropoffBadgeText: {
-    color: '#fff',
+    color: theme.colors.text.primary,
     fontSize: 12,
     fontWeight: 'bold',
   },
   mapControl: {
     width: 40,
     height: 40,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    backgroundColor: theme.colors.surface.dark,
+    borderRadius: theme.borderRadius.full,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    ...theme.shadows.sm,
   },
   menuButton: {
     position: 'absolute',
@@ -391,30 +379,25 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   bottomSheet: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 40,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 10,
+    backgroundColor: theme.colors.surface.dark,
+    borderTopLeftRadius: theme.borderRadius.xxl,
+    borderTopRightRadius: theme.borderRadius.xxl,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.md,
+    ...theme.shadows.lg,
   },
   bottomSheetHandle: {
     width: 48,
     height: 6,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 3,
     alignSelf: 'center',
-    marginBottom: 24,
+    marginBottom: theme.spacing.lg,
   },
   locationContainer: {
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 24,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   locationDots: {
     alignItems: 'center',
@@ -423,24 +406,24 @@ const styles = StyleSheet.create({
   pickupDot: {
     width: 12,
     height: 12,
-    borderRadius: 6,
-    backgroundColor: '#10B981',
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.primaryGreen,
     borderWidth: 4,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: 'rgba(13, 242, 13, 0.2)',
   },
   line: {
     width: 2,
     height: 40,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     marginVertical: 4,
   },
   dropoffDot: {
     width: 12,
     height: 12,
-    borderRadius: 6,
-    backgroundColor: '#EF4444',
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.primary,
     borderWidth: 4,
-    borderColor: 'rgba(239, 68, 68, 0.2)',
+    borderColor: 'rgba(242, 13, 51, 0.2)',
   },
   locationDetails: {
     flex: 1,
@@ -448,15 +431,16 @@ const styles = StyleSheet.create({
   },
   locationSection: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-    paddingBottom: 12,
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    paddingBottom: theme.spacing.sm,
   },
   locationLabel: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#6B7280',
+    color: theme.colors.text.secondary,
     letterSpacing: 1,
     marginBottom: 4,
+    textTransform: 'uppercase',
   },
   locationRow: {
     flexDirection: 'row',
@@ -466,51 +450,51 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: theme.colors.text.primary,
     flex: 1,
     marginRight: 8,
   },
   editButton: {
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: 'rgba(13, 242, 13, 0.1)',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: theme.borderRadius.sm,
   },
   editButtonText: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#10B981',
+    color: theme.colors.primaryGreen,
   },
   dropoffText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#111827',
+    color: theme.colors.text.primary,
     flex: 1,
     marginRight: 8,
   },
   distanceText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#6B7280',
+    color: theme.colors.text.secondary,
   },
   rideOptionsScroll: {
-    marginBottom: 20,
+    marginBottom: theme.spacing.lg,
   },
   rideOptionsContent: {
-    gap: 12,
+    gap: theme.spacing.sm,
     paddingHorizontal: 4,
   },
   rideOption: {
     width: 140,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 16,
-    padding: 12,
+    backgroundColor: theme.colors.surface.darker,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   selectedRideOption: {
-    backgroundColor: '#fff',
-    borderColor: '#EF4444',
+    backgroundColor: theme.colors.surface.dark,
+    borderColor: theme.colors.primary,
     borderWidth: 2,
   },
   bestValueRideOption: {
@@ -520,21 +504,24 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -12,
     right: 8,
-    backgroundColor: '#EF4444',
-    paddingHorizontal: 8,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing.xs,
     paddingVertical: 2,
-    borderRadius: 10,
+    borderRadius: theme.borderRadius.full,
+    zIndex: 10,
+    ...theme.shadows.sm,
   },
   bestValueText: {
-    color: '#fff',
+    color: theme.colors.text.primary,
     fontSize: 10,
     fontWeight: 'bold',
     letterSpacing: 0.5,
+    textTransform: 'uppercase',
   },
   carImage: {
     width: '100%',
     height: 64,
-    marginBottom: 8,
+    marginBottom: theme.spacing.sm,
   },
   rideOptionDetails: {
     flexDirection: 'row',
@@ -544,35 +531,36 @@ const styles = StyleSheet.create({
   rideOptionName: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#111827',
+    color: theme.colors.text.primary,
   },
   rideOptionTime: {
     fontSize: 10,
-    color: '#6B7280',
+    color: theme.colors.text.secondary,
     marginTop: 2,
   },
   rideOptionPrice: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#111827',
+    color: theme.colors.text.primary,
   },
   paymentSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: theme.spacing.lg,
   },
   paymentMethod: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    padding: 8,
-    borderRadius: 8,
+    gap: theme.spacing.xs,
+    padding: theme.spacing.xs,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   paymentText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#111827',
+    color: theme.colors.text.primary,
   },
   promoBadge: {
     flexDirection: 'row',
@@ -582,24 +570,22 @@ const styles = StyleSheet.create({
   promoText: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#6B7280',
+    color: theme.colors.text.secondary,
   },
   confirmButton: {
-    backgroundColor: '#EF4444',
-    borderRadius: 12,
-    paddingVertical: 16,
+    borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
+    ...theme.shadows.md,
+  },
+  gradientButton: {
+    paddingVertical: theme.spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
-    shadowColor: '#EF4444',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
+    gap: theme.spacing.sm,
   },
   confirmButtonText: {
-    color: '#fff',
+    color: theme.colors.text.primary,
     fontSize: 18,
     fontWeight: 'bold',
   },

@@ -11,7 +11,7 @@ export const theme = {
     background: {
       dark: '#09090b', // Deep black
       darkGreen: '#102216', // Dark green
-      darkRed: '#221013', // Dark red
+      darkRed: '#221013ff', // Dark red
       darkCharcoal: '#0a0c0a',
       light: '#f8f5f6',
     },

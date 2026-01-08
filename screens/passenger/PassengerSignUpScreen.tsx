@@ -10,21 +10,26 @@ import {
   Dimensions,
   StatusBar,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { FontAwesome } from '@expo/vector-icons';
 import { theme } from '../../utils/theme';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function PassengerSignUpScreen() {
   const navigation = useNavigation();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       
       {/* Background */}
       <ImageBackground
@@ -38,13 +43,18 @@ export default function PassengerSignUpScreen() {
         <View style={styles.greenGlow} />
       </ImageBackground>
 
-      <SafeAreaView style={styles.content}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
           {/* Header */}
           <View style={styles.header}>
             <TouchableOpacity 
               style={styles.backButton}
               onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
             >
               <MaterialIcons name="arrow-back-ios-new" size={20} color="white" />
             </TouchableOpacity>
@@ -66,13 +76,17 @@ export default function PassengerSignUpScreen() {
                   style={styles.input}
                   placeholder="John Doe"
                   placeholderTextColor={theme.colors.text.muted}
+                  value={fullName}
+                  onChangeText={setFullName}
                 />
-                <MaterialIcons 
-                  name="check-circle" 
-                  size={24} 
-                  color={theme.colors.accentGreen} 
-                  style={styles.checkIcon}
-                />
+                {fullName.length > 0 && (
+                  <MaterialIcons 
+                    name="check-circle" 
+                    size={24} 
+                    color={theme.colors.accentGreen} 
+                    style={styles.checkIcon}
+                  />
+                )}
               </View>
             </View>
 
@@ -85,6 +99,8 @@ export default function PassengerSignUpScreen() {
                 placeholderTextColor={theme.colors.text.muted}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
               />
             </View>
 
@@ -101,6 +117,8 @@ export default function PassengerSignUpScreen() {
                   placeholder="555-0199"
                   placeholderTextColor={theme.colors.text.muted}
                   keyboardType="phone-pad"
+                  value={phone}
+                  onChangeText={setPhone}
                 />
               </View>
             </View>
@@ -118,6 +136,7 @@ export default function PassengerSignUpScreen() {
                 <TouchableOpacity
                   onPress={() => setPasswordVisible(!passwordVisible)}
                   style={styles.eyeButton}
+                  activeOpacity={0.7}
                 >
                   <MaterialIcons 
                     name={passwordVisible ? "visibility-off" : "visibility"} 
@@ -140,6 +159,7 @@ export default function PassengerSignUpScreen() {
             <TouchableOpacity 
               style={styles.submitButton}
               onPress={() => navigation.navigate('Verification' as never)}
+              activeOpacity={0.8}
             >
               <Text style={styles.submitButtonText}>Create Account</Text>
             </TouchableOpacity>
@@ -153,24 +173,33 @@ export default function PassengerSignUpScreen() {
 
             {/* Social Buttons */}
             <View style={styles.socialButtons}>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+                <View style={styles.socialIcon}>
+                  <FontAwesome name="google" size={20} color="#fafafaff" />
+                </View>
                 <Text style={styles.socialButtonText}>Google</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity style={styles.socialButton} activeOpacity={0.7}>
+                <View style={styles.socialIcon}>
+                  <MaterialIcons name="apple" size={20} color="#fff" />
+                </View>
                 <Text style={styles.socialButtonText}>Apple</Text>
               </TouchableOpacity>
             </View>
-          </View>
 
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Already a member?{' '}
-              <Text style={styles.loginLink} onPress={() => console.log('Login pressed')}>
-                Log In
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                Already a member?{' '}
+                <Text style={styles.loginLink} onPress={() => navigation.goBack()}>
+                  Log In
+                </Text>
               </Text>
-            </Text>
+            </View>
           </View>
+          
+          {/* Bottom spacer for Android navigation bar */}
+          <View style={styles.bottomSpacer} />
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -181,6 +210,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background.darkRed,
+  },
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   backgroundImage: {
     position: 'absolute',
@@ -204,13 +237,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a4d2e',
     opacity: 0.2,
   },
-  content: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: Platform.OS === 'android' ? 30 : 20,
   },
   header: {
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.sm,
-    paddingBottom: theme.spacing.xl,
+    paddingTop: theme.spacing.md,
+    paddingBottom: theme.spacing.lg,
   },
   backButton: {
     width: 40,
@@ -234,10 +268,12 @@ const styles = StyleSheet.create({
     fontFamily: theme.fonts.plusJakarta + '-Regular',
     fontSize: 16,
     color: theme.colors.text.secondary,
+    lineHeight: 22,
   },
   form: {
     paddingHorizontal: theme.spacing.lg,
     gap: theme.spacing.lg,
+    flex: 1,
   },
   inputGroup: {
     gap: theme.spacing.sm,
@@ -294,6 +330,7 @@ const styles = StyleSheet.create({
     right: 16,
     top: '50%',
     transform: [{ translateY: -12 }],
+    padding: 4,
   },
   termsText: {
     fontFamily: theme.fonts.plusJakarta + '-Regular',
@@ -301,6 +338,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text.secondary,
     lineHeight: 20,
     marginTop: theme.spacing.sm,
+    textAlign: 'center',
   },
   link: {
     color: theme.colors.accentGreen,
@@ -333,10 +371,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: theme.colors.text.muted,
     marginHorizontal: theme.spacing.md,
+    backgroundColor: theme.colors.background.darkRed,
+    paddingHorizontal: 8,
   },
   socialButtons: {
     flexDirection: 'row',
     gap: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   socialButton: {
     flex: 1,
@@ -345,7 +386,16 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.md,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  socialIcon: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   socialButtonText: {
     fontFamily: theme.fonts.plusJakarta + '-Medium',
@@ -353,7 +403,6 @@ const styles = StyleSheet.create({
     color: theme.colors.text.primary,
   },
   footer: {
-    paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.xl,
     alignItems: 'center',
   },
@@ -365,5 +414,8 @@ const styles = StyleSheet.create({
   loginLink: {
     fontFamily: theme.fonts.plusJakarta + '-Bold',
     color: theme.colors.text.primary,
+  },
+  bottomSpacer: {
+    height: Platform.OS === 'android' ? 30 : 20,
   },
 });

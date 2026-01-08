@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     backgroundColor: 'rgba(245, 248, 245, 0.95)',
-    backdropFilter: 'blur(10px)',
   },
   backButton: {
     width: 40,
