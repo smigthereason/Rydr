@@ -21,7 +21,7 @@ export default function VerificationScreen() {
   const navigation = useNavigation();
   const [code, setCode] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(30);
-  const inputs = useRef<Array<TextInput | null>>([]);
+  const inputs = useRef<TextInput[]>([]);
 
   const handleCodeChange = (index: number, value: string) => {
     if (value.length > 1) {
@@ -85,7 +85,11 @@ export default function VerificationScreen() {
             {[0, 1, 2, 3].map((index) => (
               <TextInput
                 key={index}
-                ref={ref => inputs.current[index] = ref}
+                ref={(ref) => {
+                  if (ref) {
+                    inputs.current[index] = ref;
+                  }
+                }}
                 style={[
                   styles.otpInput,
                   code[index] && styles.otpInputFilled
