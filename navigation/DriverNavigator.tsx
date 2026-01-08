@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import DriverSignUpScreen from '../screens/driver/DriverSignUpScreen';
 import DocumentUploadScreen from '../screens/driver/DocumentUploadScreen';
 import ApplicationStatusScreen from '../screens/driver/ApplicationStatusScreen';
-import AppTourScreen from '../screens/shared/AppTourScreen';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +17,6 @@ export default function DriverNavigator() {
       <Stack.Screen name="DriverSignUp" component={DriverSignUpScreen} />
       <Stack.Screen name="DocumentUpload" component={DocumentUploadScreen} />
       <Stack.Screen name="ApplicationStatus" component={ApplicationStatusScreen} />
-      <Stack.Screen name="AppTour" component={AppTourScreen} />
     </Stack.Navigator>
   );
 }

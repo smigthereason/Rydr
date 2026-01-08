@@ -1,270 +1,355 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
-  ImageBackground,
   TouchableOpacity,
-  SafeAreaView,
   StyleSheet,
+  SafeAreaView,
+  Image,
   Dimensions,
-  StatusBar,
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { theme } from '../../utils/theme';
+  ScrollView,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialIcons } from "@expo/vector-icons";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
-export default function WelcomeScreen() {
-  const navigation = useNavigation();
+interface WelcomeScreenProps {
+  navigation: any;
+}
+
+export default function WelcomeScreen({ navigation }: WelcomeScreenProps) {
+  const handleGetStarted = () => {
+    navigation.navigate("AccountType");
+  };
+
+  const handleGoogleSignIn = () => {
+    // Handle Google sign in
+  };
+
+  const handleAppleSignIn = () => {
+    // Handle Apple sign in
+  };
+
+  const handleSignIn = () => {
+    navigation.navigate("Login");
+  };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-      
+    <SafeAreaView style={styles.container}>
       {/* Background Image */}
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80' }}
+      <Image
+        source={{
+          uri: "https://lh3.googleusercontent.com/aida-public/AB6AXuDVWTsPNZZkPrCCAGp54fult8JZ4MoDVWZ9ptUkG1z3qbdYciqKPFw7mRsurJs8dtSAKEB7bskemwytNYdEGyLY3WJH6a6nS6Tb6xLeRQDT8SP4libkOCVaknpp9f4JJf-D_SRd4VsP52FuVZHj6AMDRjHqLc2uN8AvKU6QmNj5ouKNaPcy2vgNM1c8n5iDf40DIiYH40LsgMPCtcs5a9X026lSKdD-9oJSJ58ch32LDQ839xwbzMAeERKoUG6Z9HB3mv5qG3SYy36E",
+        }}
         style={styles.backgroundImage}
-      >
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={["rgba(9, 9, 11, 1)", "rgba(9, 9, 11, 0.6)", "transparent"]}
+        style={styles.backgroundOverlay}
+        start={{ x: 0, y: 1 }}
+        end={{ x: 0, y: 0 }}
+      />
+
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.logoContainer}>
+          <MaterialIcons name="local-taxi" size={32} color="#DC2626" />
+          <Text style={styles.logoText}>
+            Ryd<Text style={styles.logoHighlight}>R</Text>
+          </Text>
+        </View>
+      </View>
+
+      {/* Content */}
+      <View style={styles.content}>
+        {/* Bottom Sheet */}
         <LinearGradient
-          colors={['rgba(9,9,11,0.9)', 'rgba(9,9,11,0.6)', 'transparent']}
-          style={styles.gradient}
-        />
-      </ImageBackground>
-
-      <SafeAreaView style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <MaterialIcons name="local-taxi" size={30} color={theme.colors.primary} />
-            <Text style={styles.logoText}>RYDR</Text>
-          </View>
-        </View>
-
-        {/* Main Content */}
-        <View style={styles.bottomSheet}>
+          colors={["rgba(24, 24, 27, 0.95)", "rgba(24, 24, 27, 0.98)"]}
+          style={styles.bottomSheet}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        >
+          {/* Handle */}
           <View style={styles.handle} />
-          
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>
-              Ride in <Text style={styles.titleAccent}>Style</Text>.{'\n'}
-              Arrive on Time.
-            </Text>
-            <Text style={styles.subtitle}>
-              Premium rides at your fingertips. Experience the ultimate urban transport solution.
-            </Text>
-          </View>
 
-          {/* Buttons */}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-              style={styles.primaryButton}
-              onPress={() => navigation.navigate('AccountType' as never)}
-            >
-              <Text style={styles.primaryButtonText}>Get Started</Text>
-              <Ionicons name="arrow-forward" size={20} color="white" />
-            </TouchableOpacity>
-
-            <View style={styles.socialButtonsContainer}>
-              <TouchableOpacity style={styles.socialButton}>
-                <Ionicons name="logo-google" size={20} color="white" />
-                <Text style={styles.socialButtonText}>Google</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.socialButton}>
-                <Ionicons name="logo-apple" size={20} color="white" />
-                <Text style={styles.socialButtonText}>Apple</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Already have an account?{' '}
-              <Text style={styles.signInText} onPress={() => console.log('Sign In pressed')}>
-                Sign In
+          {/* Main Content */}
+          <View style={styles.bottomContent}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>
+                Ride in <Text style={styles.titleHighlight}>Style</Text>.{"\n"}
+                Arrive on Time.
               </Text>
-            </Text>
-            
-            <View style={styles.availabilityContainer}>
-              <View style={styles.dot}>
-                <View style={styles.pingDot} />
-                <View style={styles.innerDot} />
+              <Text style={styles.subtitle}>
+                Premium rides at your fingertips. Experience the ultimate urban
+                transport solution.
+              </Text>
+            </View>
+
+            {/* Buttons */}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={styles.primaryButton}
+                activeOpacity={0.9}
+                onPress={handleGetStarted}
+              >
+                <Text style={styles.primaryButtonText}>Get Started</Text>
+                <MaterialIcons
+                  name="arrow-forward"
+                  size={20}
+                  color="#fff"
+                  style={styles.buttonIcon}
+                />
+              </TouchableOpacity>
+
+              <View style={styles.socialButtonsContainer}>
+                <TouchableOpacity
+                  style={styles.socialButton}
+                  activeOpacity={0.8}
+                  onPress={handleGoogleSignIn}
+                >
+                  <Image
+                    source={{
+                      uri: "https://developers.google.com/static/identity/images/g-logo.png",
+                    }}
+                    style={styles.googleIcon}
+                  />
+                  <Text style={styles.socialButtonText}>Google</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.socialButton}
+                  activeOpacity={0.8}
+                  onPress={handleAppleSignIn}
+                >
+                  {/* Apple SVG as component */}
+                  <View style={styles.appleIcon}>
+                    <MaterialIcons name="apple" size={20} color="#fff" />
+                  </View>
+                  <Text style={styles.socialButtonText}>Apple</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.availabilityText}>Drivers available nearby</Text>
+            </View>
+
+            {/* Login Prompt & Availability */}
+            <View style={styles.footer}>
+              <View style={styles.loginContainer}>
+                <Text style={styles.loginText}>
+                  Already have an account?{" "}
+                  <Text style={styles.loginLink} onPress={handleSignIn}>
+                    Sign In
+                  </Text>
+                </Text>
+              </View>
+
+              <View style={styles.availabilityContainer}>
+                <View style={styles.pulseContainer}>
+                  <View style={styles.pulseOuter} />
+                  <View style={styles.pulseInner} />
+                </View>
+                <Text style={styles.availabilityText}>
+                  Drivers available nearby
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-      </SafeAreaView>
-    </View>
+        </LinearGradient>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background.dark,
+    backgroundColor: "#09090b",
   },
   backgroundImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
   },
-  gradient: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    height: '100%',
+  backgroundOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  header: {
+    paddingHorizontal: 24,
+    paddingTop: 48,
+    zIndex: 10,
+  },
+  logoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  logoText: {
+    fontFamily: "ChakraPetch-Bold",
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+    letterSpacing: 1,
+    textShadowColor: "rgba(0, 0, 0, 0.5)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+  logoHighlight: {
+    color: "#DC2626",
   },
   content: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.lg,
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.sm,
-  },
-  logoText: {
-    fontFamily: theme.fonts.chakraPetch + '-Bold',
-    fontSize: 24,
-    color: 'white',
-    letterSpacing: 1,
+    justifyContent: "flex-end",
   },
   bottomSheet: {
-    backgroundColor: 'rgba(24, 24, 27, 0.95)',
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.05)',
-    padding: theme.spacing.xl,
-    paddingBottom: theme.spacing.xl,
-    marginTop: 'auto',
-    ...theme.shadows.lg,
+    borderColor: "rgba(255, 255, 255, 0.05)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 40,
+    elevation: 20,
+    paddingTop: 16,
+    paddingBottom: 40,
   },
   handle: {
     width: 48,
     height: 6,
-    backgroundColor: theme.colors.text.muted,
+    backgroundColor: "#374151",
     borderRadius: 3,
-    alignSelf: 'center',
-    marginBottom: theme.spacing.xl,
+    alignSelf: "center",
+    marginBottom: 32,
+  },
+  bottomContent: {
+    paddingHorizontal: 32,
   },
   textContainer: {
-    marginBottom: theme.spacing.xl,
+    marginBottom: 32,
   },
   title: {
-    fontFamily: theme.fonts.chakraPetch + '-Bold',
+    fontFamily: "ChakraPetch-Bold",
     fontSize: 36,
-    color: theme.colors.text.primary,
-    lineHeight: 40,
-    marginBottom: theme.spacing.md,
+    fontWeight: "bold",
+    color: "#fff",
+    lineHeight: 44,
+    letterSpacing: -0.5,
+    marginBottom: 12,
   },
-  titleAccent: {
-    color: theme.colors.primary,
+  titleHighlight: {
+    color: "#DC2626",
   },
   subtitle: {
-    fontFamily: theme.fonts.inter + '-Regular',
     fontSize: 18,
-    color: theme.colors.text.secondary,
-    lineHeight: 24,
+    color: "#9ca3af",
+    lineHeight: 28,
   },
-  buttonContainer: {
-    gap: theme.spacing.md,
+  buttonsContainer: {
+    gap: 16,
+    marginBottom: 32,
   },
   primaryButton: {
-    backgroundColor: theme.colors.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.lg,
-    paddingHorizontal: theme.spacing.xl,
-    borderRadius: theme.borderRadius.xl,
-    gap: theme.spacing.md,
-    ...theme.shadows.md,
+    backgroundColor: "#DC2626",
+    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    shadowColor: "#991b1b",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 30,
+    elevation: 8,
   },
   primaryButtonText: {
-    fontFamily: theme.fonts.inter + '-Bold',
+    color: "#fff",
     fontSize: 18,
-    color: theme.colors.text.primary,
+    fontWeight: "bold",
+  },
+  buttonIcon: {
+    marginLeft: 4,
   },
   socialButtonsContainer: {
-    flexDirection: 'row',
-    gap: theme.spacing.md,
+    flexDirection: "row",
+    gap: 16,
   },
   socialButton: {
     flex: 1,
-    backgroundColor: theme.colors.surface.dark,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius.xl,
+    backgroundColor: "#27272a",
+    borderRadius: 12,
+    paddingVertical: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-    gap: theme.spacing.sm,
+    borderColor: "rgba(255, 255, 255, 0.05)",
+  },
+  googleIcon: {
+    width: 20,
+    height: 20,
+  },
+  appleIcon: {
+    width: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
   socialButtonText: {
-    fontFamily: theme.fonts.inter + '-SemiBold',
+    color: "#fff",
     fontSize: 14,
-    color: theme.colors.text.primary,
+    fontWeight: "600",
   },
   footer: {
-    marginTop: theme.spacing.xl,
-    alignItems: 'center',
-    gap: theme.spacing.xl,
+    alignItems: "center",
+    gap: 24,
   },
-  footerText: {
-    fontFamily: theme.fonts.inter + '-Regular',
+  loginContainer: {
+    alignItems: "center",
+  },
+  loginText: {
     fontSize: 14,
-    color: theme.colors.text.secondary,
+    color: "#9ca3af",
   },
-  signInText: {
-    color: theme.colors.primary,
-    fontFamily: theme.fonts.inter + '-Bold',
+  loginLink: {
+    color: "#DC2626",
+    fontWeight: "bold",
+    fontSize: 14,
   },
   availabilityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.sm,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 20,
-    gap: theme.spacing.sm,
+    backgroundColor: "rgba(16, 185, 129, 0.15)",
+    borderWidth: 1,
+    borderColor: "rgba(16, 185, 129, 0.2)",
   },
-  dot: {
-    position: 'relative',
-    width: 20,
-    height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  pingDot: {
-    position: 'absolute',
-    width: 20,
-    height: 20,
-    backgroundColor: theme.colors.status.success,
-    borderRadius: 10,
-    opacity: 0.75,
-  },
-  innerDot: {
+  pulseContainer: {
+    position: "relative",
     width: 10,
     height: 10,
-    backgroundColor: theme.colors.status.success,
+  },
+  pulseOuter: {
+    position: "absolute",
+    width: 10,
+    height: 10,
     borderRadius: 5,
+    backgroundColor: "#10B981",
+    opacity: 0.75,
+  },
+  pulseInner: {
+    position: "absolute",
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#10B981",
   },
   availabilityText: {
-    fontFamily: theme.fonts.inter + '-Medium',
     fontSize: 12,
-    color: theme.colors.status.success,
+    fontWeight: "500",
+    color: "#10B981",
   },
 });

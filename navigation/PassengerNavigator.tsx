@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import PassengerSignUpScreen from '../screens/passenger/PassengerSignUpScreen';
-import PaymentScreen from '../screens/passenger/PaymentScreen';
-import RideSelectionScreen from '../screens/passenger/RideSelectionScreen';
-import AppTourScreen from '../screens/shared/AppTourScreen';
+import PaymentScreen from '../screens/passenger/PassengerPaymentScreen';
+import RideSelectionScreen from '../screens/passenger/MapRideRequest';
+import AppTourScreen from '../screens/passenger/AppTour';
 
 const Stack = createStackNavigator();
 
